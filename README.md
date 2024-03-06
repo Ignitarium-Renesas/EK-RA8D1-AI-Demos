@@ -4,13 +4,6 @@ A collection of AI applications for Renesas [EK-RA8D1 Evaluation Kit](https://ww
 
 ![board](res/board.png)
 
-## Sample applications
-
-1. [Head Count Application](01_head_count_app/)
-2. [Helmet & Vest Detection Application](02_helmet_vest_detection_app/)
-3. [Age & Gender Classification Application](03_age_gender_classification_app/)
-4. [Human Keypoints Detection](04_human_keypoints_detection_app/) (Experimental)
-
 ## Hardware Requirements
 
 1. EK-RA8D1 Kit
@@ -59,9 +52,10 @@ git clone https://github.com/Ignitarium-Renesas/EK-RA8D1_AiLibrary.git
 4. Build 'Debug' for the project and wait till the build finishes
 5. Go to `Debug Configurations` and Select 'Debug/\<application\>.elf' and run `Debug`
 
-For more refer the video below:
+For more refer the video below
 
-https://github.com/Ignitarium-Renesas/EK_RA8D1_AI_Library/assets/160099706/4626a7e4-0c49-41f2-a663-edd5ad2d391b
+https://github.com/Ignitarium-Renesas/EK-RA-Renesas-AI/assets/162413112/e2a50c41-8e43-4a0a-9f83-5ba3bd257c18
+
 
 ### Sample Output
 
