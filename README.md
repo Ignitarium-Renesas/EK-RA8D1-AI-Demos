@@ -2,7 +2,7 @@
 
 A collection of AI applications for Renesas [EK-RA8D1 Evaluation Kit](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ek-ra8d1-evaluation-kit-ra8d1-mcu-group).
 
-![board](res/board.png)
+![board](assets/board.png)
 
 ## Hardware Requirements
 
@@ -14,7 +14,7 @@ A collection of AI applications for Renesas [EK-RA8D1 Evaluation Kit](https://ww
 
 ### SW1 Configuration
 
-<img src="res/sw1.jpg" alt="sw1" width="50%" height="auto">
+<img src="assets/sw1.jpg" alt="sw1" width="50%" height="auto">
 
 Configure SW1 according to the below table.
 
@@ -31,7 +31,7 @@ Configure SW1 according to the below table.
 
 Assemble OV3640 camera module and APP_LCD_EK-MIPI_1 v1 LCD board on the EK-RA8D1 board as per the User's Manual. Configure Debug On-Board mode as in the below picture.
 
-<img src="res/board_setup.jpg" alt="board setup" width="50%" height="auto">
+<img src="assets/board_setup.jpg" alt="board setup" width="50%" height="auto">
 
 ## Developing Environment
 
@@ -61,5 +61,5 @@ https://github.com/Ignitarium-Renesas/EK-RA-Renesas-AI/assets/162413112/e2a50c41
 
 1. [Head Count Application](01_head_count_app/)
 
-![01_demo](res/demo/01_demo.gif)
+![01_demo](assets/demo/01_demo.gif)
 
