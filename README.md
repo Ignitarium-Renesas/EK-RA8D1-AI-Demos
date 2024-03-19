@@ -63,3 +63,24 @@ https://github.com/Ignitarium-Renesas/EK-RA-Renesas-AI/assets/162413112/e2a50c41
 
 ![01_demo](assets/demo/01_demo.gif)
 
+### To get output displayed in a laptop
+
+1. Connect the USB to the board on Full Speed USB and other end to the laptop
+2. Find the port added now, by running the below code on terminal on the laptop:
+```bash
+ls /dev/ttyACM*
+```
+3. Add the port name to the python script. This will bind the port with the python script.
+4. To setup the environment for the script to run, execute the following:
+
+```bash
+python3 -m venv env3
+source env3/bin/activate
+pip3 install pyserial
+pip3 install opencv-python
+python3 serial_monitor.py
+```
+5. Run the program on the board and then run the python script on the laptop. This will open a new window showing the headcount as below.
+
+<img src="assets/head_count.png" alt="Head count window" width="80%" height="auto">
+

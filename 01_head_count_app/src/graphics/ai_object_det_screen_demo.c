@@ -65,6 +65,11 @@ extern void process_main_menu();
 extern uint8_t 			 bsp_camera_out_rot_buffer565 [ BSP_CAM_WIDTH  * BSP_CAM_HEIGHT * BSP_CAM_BYTE_PER_PIXEL ];
 extern st_ai_detection_point_t g_ai_detection[20];
 
+extern uint32_t uart_head_count;
+extern uint32_t uart_inference_time;
+
+
+
 uint64_t object_detection_inference_time;
 
 void  do_object_detection_screen(void);
@@ -186,6 +191,10 @@ void  do_object_detection_screen(void)
 			time_str[1] += (time / 10) % 10;
 			time_str[2] += time % 10;
     		print_bg_font_18(d2_handle, 170, 720,  (char*)time_str);
+
+    		uart_head_count = head_count + 1;
+//    		uart_inference_time = time + 1;
+
 
 		}
     }
