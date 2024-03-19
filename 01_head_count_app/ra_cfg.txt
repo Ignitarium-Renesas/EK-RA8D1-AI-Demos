@@ -660,6 +660,28 @@ FSP Configuration
   Module "MIPI Physical Layer (r_mipi_phy)"
   Module "Arm CMSIS5 NN Library Source"
   Module "Arm CMSIS5 DSP Library Source"
+  Module "USB PCDC (r_usb_pcdc)"
+    Bulk In Pipe: USB PIPE4
+    Bulk Out Pipe: USB PIPE5
+    Interrupt In Pipe: USB PIPE6
+    
+  Module "USB (r_usb_basic)"
+    Parameter Checking: Default (BSP)
+    PLL Frequency: 24MHz
+    CPU Bus Access Wait Cycles: 9 cycles
+    Battery Charging: Enabled
+    Power IC Shutdown Polarity: Active High
+    Dedicated Charging Port (DCP) Mode: Disabled
+    Notifications for SET_INTERFACE/SET_FEATURE/CLEAR_FEATURE: Enabled
+    Double Buffering: Enabled
+    Continuous Transfer Mode: Disabled
+    LDO Regulator: Not Supported
+    DMA Support: Disabled
+    DMA Source Address: DMA Disabled
+    DMA Destination Address: DMA Disabled
+    USB Compliance Test mode: Disabled
+    USB TPL table name: NULL
+    
   FreeRTOS
     General: Custom FreeRTOSConfig.h: 
     General: Use Preemption: Enabled
@@ -1445,6 +1467,36 @@ FSP Configuration
     Memory Allocation: Static
     Allocate Secure Context: Enable
     
+  Thread "My Thread"
+    Symbol: new_thread0
+    Name: My Thread
+    Stack size (bytes): 1024
+    Priority: 1
+    Thread Context: NULL
+    Memory Allocation: Static
+    Allocate Secure Context: Enable
+    
+    Instance "g_pcdc0 USB PCDC (r_usb_pcdc)"
+      Name: g_pcdc0
+      
+      Instance "g_basic0 USB (r_usb_basic)"
+        Name: g_basic0
+        USB Mode: Peri mode
+        USB Speed: Full Speed
+        USB Module Number: USB_IP0 Port
+        USB Device Class: Peripheral Communications Device Class
+        USB Descriptor: g_usb_descriptor
+        USB Compliance Callback: NULL
+        USBFS Interrupt Priority: Priority 12
+        USBFS Resume Priority: Priority 12
+        USBFS D0FIFO Interrupt Priority: Priority 12
+        USBFS D1FIFO Interrupt Priority: Priority 12
+        USBHS Interrupt Priority: Priority 12
+        USBHS D0FIFO Interrupt Priority: Priority 12
+        USBHS D1FIFO Interrupt Priority: Priority 12
+        USB RTOS Callback: NULL
+        USB Callback Context: NULL
+        
   Object "g_start_menu_binary_semaphore Binary Semaphore"
     Symbol: g_start_menu_binary_semaphore
     Memory Allocation: Static

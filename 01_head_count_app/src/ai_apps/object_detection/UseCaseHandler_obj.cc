@@ -31,6 +31,8 @@ void update_detection_result(signed short index, signed short  x, signed short  
 
 extern uint8_t bsp_camera_out_buffer888[];
 extern uint8_t bsp_det_model_ip_buffer888[];
+extern uint8_t greyscale_feed_buff[];
+
 
 #define IMAGE_DATA_SIZE  (110592U)
 #define DST_HEIGHT 192
@@ -198,6 +200,23 @@ namespace app {
 
         return true;
     }
+
+//    static void CvtToGreyScale(uint8_t rgb_image, uint8_t gray_image)
+//    {
+//    	int width = 192;
+//    	int height  =192;
+//        for (int i = 0; i < height; i++) {
+//            for (int j = 0; j < width; j++) {
+//                // Get the RGB values of the current pixel
+//                unsigned char r = rgb_image[3 * (i * width + j)];
+//                unsigned char g = rgb_image[3 * (i * width + j) + 1];
+//                unsigned char b = rgb_image[3 * (i * width + j) + 2];
+//
+//                // Convert RGB to grayscale using a weighted sum
+//                gray_image[i * width + j] = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+//            }
+//        }
+//    }
 
 
 
