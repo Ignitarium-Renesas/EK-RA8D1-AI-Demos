@@ -82,5 +82,4 @@ python3 serial_monitor.py
 ```
 5. Run the program on the board and then run the python script on the laptop. This will open a new window showing the headcount as below.
 
-<img src="assets/head_count.png" alt="Head count window" width="80%" height="auto">
-
+<img src="assets/02_out.png" alt="Head count window" width="80%" height="auto">
