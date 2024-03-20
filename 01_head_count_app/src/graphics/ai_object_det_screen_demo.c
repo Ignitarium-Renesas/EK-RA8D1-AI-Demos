@@ -123,13 +123,13 @@ void  do_object_detection_screen(void)
 				d2_tm_filter);
 
         // show model information
-        print_bg_font_18(d2_handle, 180, 260,  (char*)"Neural network - FastestDet");
+//        print_bg_font_18(d2_handle, 180, 260,  (char*)"Neural network - FastestDet", 1);
 
     }
     else
     {
-        print_bg_font_18(d2_handle, 300, 710,  (char*)"Head Count");
-        print_bg_font_18(d2_handle, 210, 700,  (char*)"Inference time");
+//        print_bg_font_18(d2_handle, 300, 710,  (char*)"Head Count", 1);
+//        print_bg_font_18(d2_handle, 210, 700,  (char*)"Inference time", 1);
     	volatile t2 = get_timestamp() - t1;
     	t1 = get_timestamp();
     	/* RESOLUTION FROM CAMERA */
@@ -181,16 +181,15 @@ void  do_object_detection_screen(void)
 			// update string on display
 			char num_str[2] = {'\0'};
 			num_str[0] = '0' + head_count;
-			print_bg_font_18(d2_handle, 260, 750,  (char*)"               ");
-			print_bg_font_18(d2_handle, 260, 750,  (char*)num_str);
+			print_bg_font_18(d2_handle, 50, 680,  (char*)num_str, 15);
 
 			uint32_t time = object_detection_inference_time / 1000; // ms
 
-			char time_str[7] = {'0', '0', '0', ' ', 'm', 's', '\0'};
-			time_str[0] += (time / 100);
-			time_str[1] += (time / 10) % 10;
-			time_str[2] += time % 10;
-    		print_bg_font_18(d2_handle, 170, 720,  (char*)time_str);
+//			char time_str[7] = {'0', '0', '0', ' ', 'm', 's', '\0'};
+//			time_str[0] += (time / 100);
+//			time_str[1] += (time / 10) % 10;
+//			time_str[2] += time % 10;
+//    		print_bg_font_18(d2_handle, 170, 720,  (char*)time_str, 1);
 
     		uart_head_count = head_count + 1;
 //    		uart_inference_time = time + 1;

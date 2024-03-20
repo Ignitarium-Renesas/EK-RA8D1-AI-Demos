@@ -1420,7 +1420,7 @@ bool_t initialise_bg_font_18_full(void)
 
 static char myc;
 
-void print_bg_font_18(d2_device *handle, d2_point _xs, d2_point _ys, char *_str)
+void print_bg_font_18(d2_device *handle, d2_point _xs, d2_point _ys, char *_str, int scale)
 {
     st_gimp_bg_font_18_image_t *img = NULL;
     d2_point cur_x = _xs;
@@ -1443,7 +1443,7 @@ void print_bg_font_18(d2_device *handle, d2_point _xs, d2_point _ys, char *_str)
 				d2_blitcopy(handle,
 						(d2_width) img->width, (d2_width) img->height, // Source width/height
 						(d2_blitpos) 0, 0, // Source position
-						(d2_width) ((img->width) << 4), (d2_width) ((img->height) << 4), // Destination width/height
+						(d2_width) (((img->width) * scale) << 4), (d2_width) (((img->height) * scale) << 4), // Destination width/height
 						(cur_x << 4), (cur_y << 4),  // Destination position
 						d2_tm_filter);
 

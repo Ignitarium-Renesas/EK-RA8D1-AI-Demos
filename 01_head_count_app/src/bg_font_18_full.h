@@ -9,7 +9,7 @@
 #define BG_FONT_18_FULL_H_
 
 extern bool_t initialise_bg_font_18_full(void);
-extern void print_bg_font_18(d2_device *handle, d2_point _xs, d2_point _ys, char *_str);
+extern void print_bg_font_18(d2_device *handle, d2_point _xs, d2_point _ys, char *_str, int scale);
 
 #endif // BG_FONT_18_FULL_H_
 
