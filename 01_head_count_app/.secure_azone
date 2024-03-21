@@ -191,6 +191,8 @@
         <peripheral name="GPT3" group="GPT" security=""/>
         <peripheral name="GLCDC" security=""/>
         <peripheral name="GPT0" group="GPT" security=""/>
+        <peripheral name="USB_FS" security=""/>
+        <peripheral name="USB_HS" security=""/>
         <peripheral name="ICU">
             <slot name="IRQ0" secure="true"/>
             <slot name="IRQ1" secure="true"/>
@@ -214,6 +216,13 @@
             <slot name="IRQ19" secure="true"/>
             <slot name="IRQ20" secure="true"/>
             <slot name="IRQ21" secure="true"/>
+            <slot name="IRQ22" secure="true"/>
+            <slot name="IRQ23" secure="true"/>
+            <slot name="IRQ24" secure="true"/>
+            <slot name="IRQ25" secure="true"/>
+            <slot name="IRQ26" secure="true"/>
+            <slot name="IRQ27" secure="true"/>
+            <slot name="IRQ28" secure="true"/>
         </peripheral>
     </partition>
 </azone>
