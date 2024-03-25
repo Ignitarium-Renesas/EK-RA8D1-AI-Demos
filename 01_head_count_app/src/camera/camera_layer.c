@@ -520,13 +520,13 @@ uint32_t adjust_brightness(void* inbuf, uint8_t* rgb2_buf, uint32_t width, uint3
     y_pos = 1;
     /*Brightness adjustment*/
     if(average_brightness > 230)
-        brightness_factor = 0.7f;
+        brightness_factor = 0.4f;
     else if(average_brightness > 190 &&  average_brightness <=230)
-        brightness_factor = 0.8f;
+        brightness_factor = 0.5f;
     else if(average_brightness > 150 &&  average_brightness <=190)
-        brightness_factor = 1.0f;
+        brightness_factor = 0.7f;
     else if(average_brightness > 130 &&  average_brightness <=150)
-        brightness_factor = 1.3f;
+        brightness_factor = 1.0f;
     else if(average_brightness > 100 &&  average_brightness <=130)
         brightness_factor = 1.5f;
     else if(average_brightness > 80 &&  average_brightness <=100)
