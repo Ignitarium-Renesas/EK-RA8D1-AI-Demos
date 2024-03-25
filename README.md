@@ -86,5 +86,6 @@ python3 serial_monitor.py
 
 6. To train the model using the images from the camera of the board, a python script is added to scripts directory. Run that and press s to save images using the below command  
 ```
+cd scripts/
 python3 save_img.py
 ```

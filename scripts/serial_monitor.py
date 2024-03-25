@@ -9,8 +9,8 @@ def create_background_image(width, height, color=(255, 255, 255)):
     background = np.full((height, width, 3), color, dtype=np.uint8)
 
     # Load the images
-    overlay = cv2.imread('./IGN_LOGO.png', cv2.IMREAD_UNCHANGED)#Change the path as required
-    overlay1 = cv2.imread('./renesas_logo1.png', cv2.IMREAD_UNCHANGED)#Change the path as required
+    overlay = cv2.imread('./logos/IGN_LOGO.png', cv2.IMREAD_UNCHANGED)#Change the path as required
+    overlay1 = cv2.imread('./logos/renesas_logo1.png', cv2.IMREAD_UNCHANGED)#Change the path as required
 
     # Resize the images
     overlay = cv2.resize(overlay, (int(overlay.shape[1] * 0.7), int(overlay.shape[0] * 0.6)))
