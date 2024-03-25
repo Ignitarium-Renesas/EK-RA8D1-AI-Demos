@@ -128,7 +128,7 @@ void  do_object_detection_screen(void)
     }
     else
     {
-//        print_bg_font_18(d2_handle, 300, 710,  (char*)"Head Count", 1);
+        print_bg_font_18(d2_handle, 400, 710,  (char*)"Head Count", 1);
 //        print_bg_font_18(d2_handle, 210, 700,  (char*)"Inference time", 1);
     	volatile t2 = get_timestamp() - t1;
     	t1 = get_timestamp();
