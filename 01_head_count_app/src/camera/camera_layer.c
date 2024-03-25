@@ -149,7 +149,8 @@ uint8_t           bsp_camera_out_buffer888 [ BSP_CAM_WIDTH  * BSP_CAM_HEIGHT * 3
 uint8_t           bsp_det_model_ip_buffer888[ 192 * 192 * 3 ] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
 //uint8_t           bsp_det_crop_model_ip_buffer888[ 240 * 240 * 3 ] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
 uint8_t           bsp_camera_out_rot_buffer565 [ 240  * 320 * BSP_CAM_BYTE_PER_PIXEL ] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
-uint8_t 		  greyscale_feed_buff[192 * 192] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
+uint8_t 		  greyscale_feed_buff[(BSP_CAM_WIDTH * BSP_CAM_HEIGHT)] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
+uint8_t           cam_out_rgb_888_buff [ BSP_CAM_WIDTH  * BSP_CAM_HEIGHT * 3 ] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
 
 //uint8_t           bsp_cls_model_ip_buffer888[ 224 * 224 * 3 ] BSP_PLACE_IN_SECTION(".sdram") BSP_ALIGN_VARIABLE(8);
 //uint8_t           bsp_cls_model_ip_buffer888[ 224 * 224 * 3 ] BSP_ALIGN_VARIABLE(8);
@@ -332,8 +333,6 @@ void bsp_camera_yuv422_to_rgb565(const void* inbuf, void* outbuf, uint16_t width
 
   //  SCB_DisableDCache();
 }
-
-
 
 void bsp_camera_yuv422_to_rgb888(const void* inbuf, void* outbuf, uint16_t width, uint16_t height)
 {

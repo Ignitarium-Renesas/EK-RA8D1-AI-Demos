@@ -83,3 +83,8 @@ python3 serial_monitor.py
 5. Run the program on the board and then run the python script on the laptop. This will open a new window showing the headcount as below.
 
 <img src="assets/02_out.png" alt="Head count window" width="80%" height="auto">
+
+6. To train the model using the images from the camera of the board, a python script is added to scripts directory. Run that and press s to save images using the below command  
+```
+python3 save_img.py
+```
