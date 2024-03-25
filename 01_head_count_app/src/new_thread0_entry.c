@@ -1,5 +1,7 @@
 #include "new_thread0.h"
 #include <stdbool.h>
+#include "common_data.h"
+#include "camera_layer.h"
 
 
 usb_status_t event;
@@ -14,20 +16,23 @@ extern uint8_t g_apl_hs_configuration[];
 extern uint8_t g_apl_qualifier_descriptor[];
 extern uint8_t *g_apl_string_table[];
 
+extern uint8_t cam_out_rgb_888_buff[];
+extern uint8_t bsp_camera_out_buffer888[];
+#define GREYSCALE_SIZE (BSP_CAM_WIDTH * BSP_CAM_HEIGHT)
+#define USB_MAX_PACKET_SIZE	9600
+#define IMAGE_SIZE	(320 * 240 * 3)
+#define MAX_USB_ITERATIONS	(IMAGE_SIZE / USB_MAX_PACKET_SIZE)
 
-#define GREYSCALE_SIZE	(192 * 192)
-
-uint32_t uart_head_count = 30;
-uint32_t uart_inference_time = 20;
+uint32_t uart_head_count;
+uint32_t uart_inference_time;
 uint8_t *img_buf;
 
-static bool  b_usb_attach = false;
+//static bool  b_usb_attach = false;
 uint8_t g_buf[READ_BUF_SIZE]            = {0};
 usb_event_info_t    event_info          = {0};
 static usb_pcdc_linecoding_t g_line_coding;
 uint32_t len = 0;
 char* buff[8];
-
 
 const usb_descriptor_t g_usb_descriptor =
 {
@@ -39,23 +44,15 @@ const usb_descriptor_t g_usb_descriptor =
  NUM_STRING_DESCRIPTOR
 };
 
-
-void recieve_send_USB();
-static fsp_err_t print_to_console(char *p_data);
-static fsp_err_t check_for_write_complete(void);
+void usb_init();
 void myUsbCallback(usb_event_info_t *event, usb_hdl_t task_handle, usb_onoff_t status);
-
-
+void read_cam();
 extern fsp_err_t R_USB_Callback (usb_callback_t * p_callback);
-
-
 
 static volatile usb_pcdc_ctrllinestate_t g_control_line_state = {
     .bdtr = 0,
     .brts = 0,
 };
-
-
 
 /* My Thread entry function */
 /* pvParameters contains TaskHandle_t */
@@ -66,15 +63,8 @@ void new_thread0_entry(void *pvParameters) {
 	/* TODO: add your own code here */
 	while (1) {
 		vTaskDelay(1);
-//		recieve_send_USB();
-//    	print_to_console("\r\nhello...");
-
-//    	R_USB_Read (&g_basic0_ctrl, g_buf, READ_BUF_SIZE, USB_CLASS_PCDC);
-
 	}
 }
-
-
 
 // Function to initialize USB
 void usb_init() {
@@ -95,8 +85,8 @@ void myUsbCallback(usb_event_info_t *event_info, usb_hdl_t task_handle, usb_onof
 	FSP_PARAMETER_NOT_USED(status);
 	event = event_info->event;
 
-
-    usb_setup_t             setup;
+	fsp_err_t err;
+    usb_setup_t setup;
 
     switch (event_info->event)
             {
@@ -106,26 +96,30 @@ void myUsbCallback(usb_event_info_t *event_info, usb_hdl_t task_handle, usb_onof
                 break;
                 case USB_STATUS_WRITE_COMPLETE :
                   R_USB_Read (&g_basic0_ctrl, g_buf, READ_BUF_SIZE, USB_CLASS_PCDC);
-//
+
                 break;
                 case USB_STATUS_READ_COMPLETE :
-                    if(g_buf[0] == 'c')
-                    {
-                    	R_USB_Write (&g_basic0_ctrl, &uart_head_count, sizeof(uart_head_count), USB_CLASS_PCDC);
-                    }
-                    else if(g_buf[0] == 't')
-                    {
-//                    	R_USB_Write (&g_basic0_ctrl, uart_inference_time, sizeof(uart_inference_time), USB_CLASS_PCDC);
-                    }
-                    else if(g_buf[0] == 'i')
-                    {
-//                    	R_USB_Write (&g_basic0_ctrl, img_buf, GREYSCALE_SIZE, USB_CLASS_PCDC);
-                    }
-                    else
-                    {
-//                    	R_USB_Write (&g_basic0_ctrl, "Not_C_or_T", sizeof("Not_C_or_T"), USB_CLASS_PCDC);
-                    }
+				if(g_buf[0] == 'c')
+				{
+					R_USB_Write (&g_basic0_ctrl, &uart_head_count, sizeof(uart_head_count), USB_CLASS_PCDC);
+				}
+				else if(g_buf[0] == 'i')
+				{
+					uint8_t buff_index = g_buf[1];
 
+					if(g_buf[1] == 0)
+					{
+						read_cam();
+					}
+					if(buff_index <= MAX_USB_ITERATIONS)
+					{
+						err = R_USB_Write (&g_basic0_ctrl, &cam_out_rgb_888_buff[(buff_index * USB_MAX_PACKET_SIZE)], USB_MAX_PACKET_SIZE, USB_CLASS_PCDC);
+						if(err != FSP_SUCCESS)
+						{
+							while(1);
+						}
+					}
+				}
                 break;
                 case USB_STATUS_REQUEST : /* Receive Class Request */
                     R_USB_SetupGet(event_info, &setup);
@@ -145,7 +139,6 @@ void myUsbCallback(usb_event_info_t *event_info, usb_hdl_t task_handle, usb_onof
                             g_control_line_state.bdtr = (unsigned char)((event_info->setup.request_value >> 0) & 0x01);
                             g_control_line_state.brts = (unsigned char)((event_info->setup.request_value >> 1) & 0x01);
                         }
-
                     }
                     else
                     {
@@ -165,4 +158,13 @@ void myUsbCallback(usb_event_info_t *event_info, usb_hdl_t task_handle, usb_onof
                 break;
             }
 
+}
+
+void read_cam()
+{
+//	xSemaphoreTake(&g_new_mutex0, ( TickType_t ) 10);
+//copy the src image to a buffer
+	memcpy(cam_out_rgb_888_buff, bsp_camera_out_buffer888,  BSP_CAM_WIDTH  * BSP_CAM_HEIGHT * 3);
+//Release critical section for other threads to use
+//	xSemaphoreGive(&g_new_mutex0);
 }
