@@ -55,6 +55,7 @@ bool DetectorPostProcess::DoPostProcess()
     /* Start postprocessing */
     int originalImageWidth  = m_postProcessParams.originalImageSize;
     int originalImageHeight = m_postProcessParams.originalImageSize;
+    arm::app::image::Box negRegion = this->m_postProcessParams.negRegion;
 
     std::forward_list<image::Detection> detections;
     GetNetworkBoxes(this->m_net, originalImageWidth, originalImageHeight, m_postProcessParams.threshold, detections);
@@ -87,6 +88,10 @@ bool DetectorPostProcess::DoPostProcess()
         float boxHeight = yMax - yMin;
 
         for (int j = 0; j < this->m_net.numClasses; ++j) {
+        	if (CalculateBoxIntersect(it.bbox, negRegion) > 0.2)
+        		continue;
+        	if ((int)(boxWidth*boxHeight) < this->m_postProcessParams.minBoxArea)
+        		continue;
             if (it.prob[j] > 0) {
 
                 object_detection::DetectionResult tmpResult = {};

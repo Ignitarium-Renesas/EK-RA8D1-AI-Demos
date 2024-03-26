@@ -37,6 +37,8 @@ namespace object_detection {
         float nms = 0.45f;
         int numClasses = 1;
         int topN = 0;
+        int minBoxArea = 600;
+        arm::app::image::Box negRegion = {96.0, 168.0, 192, 48};
 	PostProcessParams(int iptRows, int iptCols, int size):
 	    inputImgRows(iptRows), inputImgCols(iptCols), originalImageSize(size){}
 		
