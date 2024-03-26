@@ -151,6 +151,9 @@ void  do_object_detection_screen(void)
         bsp_camera_capture_image();
 
 		{
+        	// negRegion drawing
+        	d2_setcolor(d2_handle, 0, 0x00FF00);
+			d2_renderline(d2_handle, (d2_point) ((120) << 4), (d2_point) (640 << 4), (d2_point) ((120) << 4), (d2_point) ((0) << 4), (d2_point) (2 << 4), 0);
 			uint8_t head_count = 0;
 #define DET_MODEL_IMG_SIZE_X 192
 #define DET_MODEL_IMG_SIZE_Y 192
