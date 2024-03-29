@@ -91,8 +91,8 @@ python3 save_img.py
 ```
 Please take note of the following:
 
-- The head must be positioned above the green line displayed on the screen for successful detection.
-- The position of the green line can be adjusted by modifying the negRegion parameter in the PostProcessParams.
+- The head must be positioned above the yellow line displayed on the screen for successful detection.
+- The position of the yellow line can be adjusted by modifying the negRegion parameter in the PostProcessParams.
 - Additionally, you must modify the code responsible for drawing lines in the ai_object_det_screen_demo.c file to reflect the changes made to the negRegion parameter.
 
 By adjusting the negRegion parameter and updating the line drawing code accordingly, you can change the position of the green line and ensure proper head detection.
