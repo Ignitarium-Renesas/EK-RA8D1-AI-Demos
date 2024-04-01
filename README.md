@@ -78,13 +78,27 @@ python3 -m venv env3
 source env3/bin/activate
 pip3 install pyserial
 pip3 install opencv-python
-python3 serial_monitor.py
 ```
-5. Run the program on the board and then run the python script on the laptop. This will open a new window showing the headcount as below.
+5. Run the program on the board and then run the python script on the laptop with command line argument as "count" for printing the headcount as text only.
+
+```
+python3 display_count_img.py count
+```
+
+This will open a new window showing the headcount as below.
 
 <img src="assets/02_out.png" alt="Head count window" width="80%" height="auto">
 
-6. To train the model using the images from the camera of the board, a python script is added to scripts directory. Run that and press s to save images using the below command  
+6. To view both the headcount as text and view the video simultaneously run the python script on the laptop with command line argument as "img"
+
+```
+python3 display_count_img.py img
+```
+This will open a window showing the headcount and the video as below
+
+![02_output](assets/demo/02_headcount_video.gif)
+
+7. To train the model using the images from the camera of the board, a python script is added to scripts directory. Run that and press s to save images using the below command  
 ```
 cd scripts/
 python3 save_img.py
