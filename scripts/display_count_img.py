@@ -4,14 +4,15 @@ import time
 import cv2 
 import numpy as np
 import sys
+import argparse
 
-def create_background_image(width, height, bgr_img = None, color=(255, 255, 255)):
+def create_background_image(width, height, bgr_img=None, color=(255, 255, 255), coordinates=None):
     # Create a blank white image
     background = np.full((height, width, 3), color, dtype=np.uint8)
 
     # Load the images
-    overlay = cv2.imread('./IGN_LOGO.png', cv2.IMREAD_UNCHANGED)#Change the path as required
-    overlay1 = cv2.imread('./renesas_logo1.png', cv2.IMREAD_UNCHANGED)#Change the path as required
+    overlay = cv2.imread('./IGN_LOGO.png', cv2.IMREAD_UNCHANGED)  # Change the path as required
+    overlay1 = cv2.imread('./renesas_logo1.png', cv2.IMREAD_UNCHANGED)  # Change the path as required
 
     # Resize the images
     overlay = cv2.resize(overlay, (int(overlay.shape[1] * 0.7), int(overlay.shape[0] * 0.6)))
@@ -37,17 +38,25 @@ def create_background_image(width, height, bgr_img = None, color=(255, 255, 255)
             if overlay1[y, x, 3] > 0:
                 background[y_offset1 + y, x_offset1 + x] = overlay1[y, x, :3]  # Copy BGR channels only
 
+    # print(bgr_img.shape[:2])
     # Overlay the third image (if provided)
     if bgr_img is not None:
+        if coordinates is not None:
+            draw_bounding_boxes(bgr_img, coordinates)
+        
         # Resize the third image to 1.5 times its original size
         bgr_img_resized = cv2.resize(bgr_img, (int(bgr_img.shape[1] * 1.75), int(bgr_img.shape[0] * 1.75)))
-        
+
+        # print(bgr_img.shape[:2])
+
         # Calculate the position to overlay the third image at the center
         x_offset3 = (width - bgr_img_resized.shape[1]) - 220
         y_offset3 = (height - bgr_img_resized.shape[0]) - 100
-        
+
         # Overlay the resized third image onto the background
-        background[y_offset3:y_offset3+bgr_img_resized.shape[0], x_offset3:x_offset3+bgr_img_resized.shape[1]] = bgr_img_resized
+        background[y_offset3:y_offset3 + bgr_img_resized.shape[0], x_offset3:x_offset3 + bgr_img_resized.shape[1]] = bgr_img_resized
+        print(bgr_img_resized.shape[:2])
+        cv2.line(background,(20,410),(579,410),(0,255,0),1)
 
     return background
 
@@ -80,20 +89,36 @@ def read_img(ser, packet_size = 9600, image_size = 320 * 240 * 3):
         ser.write(bytearray(serial_buff))
         data_bytes = ser.read(packet_size)
         img.extend(data_bytes)
-        # print('\n', i, len(data_bytes))
 
         image_buff_index += 1
-
 
         if image_buff_index > 24:
             image_buff_index = 0
 
     return img
 
+def draw_bounding_boxes(image, coords):
+    print(image.shape[1])
+    for box in coords:
+        if np.any(box):  # Check if any of the coordinates are non-zero
+            x, y, w, h = box
+            x = int(x * 320 / 192)
+            y = int(y * 240 / 192)
+            w = int(w * 320 / 192)
+            h = int(h * 240 / 192)
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 1)
+    return image
+
 
 def main():
 
-    choice = sys.argv[1]
+    parser = argparse.ArgumentParser(description='Program to view count and image with saving capability')
+    parser.add_argument('-img', action='store_true', help='Indicates whether to show image')
+
+    args = parser.parse_args()
+
+
+    # choice = sys.argv[1]
     baud_rate = 115200  
     serial_port = '/dev/ttyACM0'
     window_name = 'DetectionResult'
@@ -110,18 +135,76 @@ def main():
     packet_size = 9600
 
     while True:
-        if choice == 'count':
-            print(choice)
+        if args.img:
+            t0 = time.time()
+            ser.flush()
+            time.sleep(0.1)  # Adjust the delay as needed
+            
+            ser.write(b'c')
+            # Read data from the serial port
+            head_count_bytes = ser.read(4)
+            head_count_int = struct.unpack('<I', head_count_bytes)[0]
+            head_count_int -= 1
+
+            ser.write(b'b')
+            # Read data from the serial port
+            b_box_bytes = ser.read(160)
+            b_box_int = struct.unpack('<80H', b_box_bytes)
+            b_box_tuples = [(b_box_int[i], b_box_int[i+1], b_box_int[i+2], b_box_int[i+3]) for i in range(0, len(b_box_int), 4)]
+
+            new_scale = 1.75
+
+            # Scale the bounding box tuples
+            scaled_b_box_tuples = []
+            for b_box_tuple in b_box_tuples:
+                scaled_b_box_tuple = tuple(int(coord * new_scale) for coord in b_box_tuple)
+                scaled_b_box_tuples.append(scaled_b_box_tuple)
+
+            # print(b_box_int, end = ' ')
+
+            img = read_img(ser, packet_size, img_size)
+
+            rgb_image = np.frombuffer(img, dtype=np.uint8).reshape((240, 320, 3))
+            bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
+            # bgr_image = cv2.flip(bgr_image, 1)
+            # frame_image = create_background_image(width, height, bgr_img = bgr_image, coordinates = b_box_int)
+            frame_image = create_background_image(width, height, bgr_img=bgr_image, coordinates=b_box_tuples)
+
+            data = 'HEAD COUNT'
+            org = (590, 150) 
+            frame_image = draw_text(frame_image, data, org, fontScale = 1)
+
+            data = str(head_count_int)
+            org = (620, 400) 
+            frame_image = draw_text(frame_image, data, org, fontScale = 8)
+
+            # Display the image 
+            cv2.namedWindow('RGB Image', cv2.WND_PROP_FULLSCREEN)
+            cv2.setWindowProperty('RGB Image', cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+            cv2.imshow('RGB Image', frame_image)
+
+            t1 = time.time()
+
+            diff = t1 - t0
+            print(diff)
+            
+            k = cv2.waitKey(30)  # Add a slight delay to allow the window to update
+
+            if k == 115:
+                img_name = 'img' + str(t1) + '.jpg'
+                cv2.imwrite(img_name, bgr_image)
+            if k == 27:
+                cv2.destroyAllWindows()
+                ser.close()
+                break
+        else:
             # Write command to serial port
             ser.write(b'c')
-            print(1)
             # Read data from the serial port
             data_bytes = ser.read(4)
-            print(data_bytes)
             # Unpack bytes into uint32_t integer
             
             integer_value = struct.unpack('<I', data_bytes)[0]
-            # print("Received integer:", integer_value)
 
             # Create background_image with logo
             background_image = create_background_image(width, height)
@@ -145,63 +228,6 @@ def main():
             # Handle keyboard interruption
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-
-        elif choice == 'img':
-            t0 = time.time()
-            ser.flush()
-            time.sleep(0.1)  # Adjust the delay as needed
-            
-
-            ser.write(b'c')
-            # Read data from the serial port
-            head_count_bytes = ser.read(4)
-            head_count_int = struct.unpack('<I', head_count_bytes)[0]
-            head_count_int -= 1
-
-            # ser.write(b'b')
-            # Read data from the serial port
-            # b_box_bytes = ser.read(16)
-            # b_box_int = struct.unpack('<4I', b_box_bytes)
-            # print(b_box_int, end = ' ')
-
-
-            img = read_img(ser, packet_size, img_size)
-
-            rgb_image = np.frombuffer(img, dtype=np.uint8).reshape((240, 320, 3))
-            bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
-            
-            frame_image = create_background_image(width, height, bgr_img = bgr_image)
-
-            data = 'HEAD COUNT'
-            org = (590, 150) 
-            frame_image = draw_text(frame_image, data, org, fontScale = 1)
-
-            data = str(head_count_int)
-            org = (620, 400) 
-            frame_image = draw_text(frame_image, data, org, fontScale = 8)
-
-
-                    # Display the image 
-            cv2.namedWindow('RGB Image', cv2.WND_PROP_FULLSCREEN)
-            cv2.setWindowProperty('RGB Image', cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-            cv2.imshow('RGB Image', frame_image)
-
-            t1 = time.time()
-
-            diff = t1 - t0
-            print(diff)
-            
-            k = cv2.waitKey(30)  # Add a slight delay to allow the window to update
-
-            if k == 115:
-                img_name = 'img' + str(t1) + '.jpg'
-                cv2.imwrite(img_name, frame_image)
-            if k == 27:
-                cv2.destroyAllWindows()
-                ser.close()
-                break
-
-
 
     # Close the serial port
     ser.close()

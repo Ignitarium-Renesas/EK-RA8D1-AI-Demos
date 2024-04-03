@@ -79,34 +79,34 @@ source env3/bin/activate
 pip3 install pyserial
 pip3 install opencv-python
 ```
-5. Run the program on the board and then run the python script on the laptop with command line argument as "count" for printing the headcount as text only.
-
+5. Run the program on the board and then run the python script on the laptop for printing the headcount as text only.
 ```
-python3 display_count_img.py count
+python3 display_count_img.py
 ```
 
 This will open a new window showing the headcount as below.
 
 <img src="assets/02_out.png" alt="Head count window" width="80%" height="auto">
 
-6. To view both the headcount as text and view the video simultaneously run the python script on the laptop with command line argument as "img"
+
+6. To view both the headcount as text and view the video simultaneously run the python script on the laptop with -img option
 
 ```
-python3 display_count_img.py img
+python3 display_count_img.py -img
 ```
 This will open a window showing the headcount and the video as below
 
 ![02_output](assets/demo/02_headcount_video.gif)
 
-7. To train the model using the images from the camera of the board, a python script is added to scripts directory. Run that and press s to save images using the below command  
+7. To train the model using the images from the camera of the board run the same python script and press 's' to save images when the image is ready.  
+
 ```
-cd scripts/
-python3 save_img.py
+python3 display_count_img.py
 ```
 Please take note of the following:
 
-- The head must be positioned above the yellow line displayed on the screen for successful detection.
-- The position of the yellow line can be adjusted by modifying the negRegion parameter in the PostProcessParams.
+- The head must be positioned above the green line displayed on the screen for successful detection.
+- The position of the green line can be adjusted by modifying the negRegion parameter in the PostProcessParams.
 - Additionally, you must modify the code responsible for drawing lines in the ai_object_det_screen_demo.c file to reflect the changes made to the negRegion parameter.
 
 By adjusting the negRegion parameter and updating the line drawing code accordingly, you can change the position of the green line and ensure proper head detection.
