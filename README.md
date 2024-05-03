@@ -4,6 +4,10 @@ A collection of AI applications for Renesas [EK-RA8D1 Evaluation Kit](https://ww
 
 ![board](assets/board.png)
 
+## Sample Applications
+1. [Head Count Application](01_head_count_app/)
+2. [Helmet and Vest Detection Application](02_helmet_vest_detection_app/)
+
 ## Hardware Requirements
 
 1. EK-RA8D1 Kit
@@ -61,6 +65,7 @@ https://github.com/Ignitarium-Renesas/EK-RA-Renesas-AI/assets/162413112/e2a50c41
 
 1. [Head Count Application](01_head_count_app/)
 
+
 ![01_demo](assets/demo/01_demo.gif)
 
 ### To get output displayed in a laptop
@@ -86,7 +91,7 @@ python3 display_count_img.py
 
 This will open a new window showing the headcount as below.
 
-<img src="assets/02_out.png" alt="Head count window" width="80%" height="auto">
+<img src="assets/demo/02_out.png" alt="Head count window" width="80%" height="auto">
 
 
 6. To view both the headcount as text and view the video simultaneously run the python script on the laptop with -img option
@@ -110,3 +115,7 @@ Please take note of the following:
 - Additionally, you must modify the code responsible for drawing lines in the ai_object_det_screen_demo.c file to reflect the changes made to the negRegion parameter.
 
 By adjusting the negRegion parameter and updating the line drawing code accordingly, you can change the position of the green line and ensure proper head detection.
+
+2. [Helmet and Vest Detection Application](02_helmet_vest_detection_app/)
+
+![02_demo](assets/demo/02_demo.gif)
